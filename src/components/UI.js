@@ -7,10 +7,6 @@ let todoList = new TodoList();
 
 export default class UI {
   loadBase() {
-    let container = document.getElementById("container");
-    let sidebar = document.getElementById("sidebar");
-    let taskContainer = document.getElementById("taskContainer");
-
     //pre storage implementation
     let todoList = new TodoList();
     const laundry = new Task(
@@ -56,13 +52,11 @@ export default class UI {
 
   loadTasks(project) {
     const taskContainer = document.getElementById("task-container");
-    //taskContainer.textContent = `${project.title}`;
     taskContainer.textContent = "";
 
     this.loadProjectHeader(project);
 
     const tasks = project.tasks;
-
     for (const task of tasks) {
       this.createTaskDiv(project, task);
     }
@@ -84,10 +78,6 @@ export default class UI {
     const dateLabel = document.createElement("label");
     dateLabel.textContent = `${task.dueDate}`;
     dueDateDiv.appendChild(dateLabel);
-    // const calendar = document.createElement("input");
-    // calendar.type = "date";
-
-    // dueDateDiv.appendChild(calendar);
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "X";
@@ -108,13 +98,78 @@ export default class UI {
 
     projectName.textContent = `${project.title}`;
     addTaskBtn.textContent = "+";
-    addTaskBtn.onclick = () => this.addTaskModal(project);
+
+    addTaskBtn.onclick = () => this.openTaskModal(project);
     projectHeader.appendChild(projectName);
     projectHeader.appendChild(addTaskBtn);
     taskContainer.appendChild(projectHeader);
   }
 
-  addTaskModal(project) {}
+  openTaskModal(project) {
+    const modal = document.getElementById("modal");
+    // Reset modal div
+    modal.textContent = "";
+
+    const titleInput = document.createElement("input");
+    const dueDateInput = document.createElement("input");
+    const priorityContainer = document.createElement("select");
+    const buttonContainer = document.createElement("div");
+    const cancelBtn = document.createElement("button");
+    const submitBtn = document.createElement("button");
+
+    titleInput.placeholder = "Title";
+    titleInput.required = true;
+    titleInput.maxLength = 30;
+
+    dueDateInput.type = "date";
+
+    priorityContainer.placeholder = "Priority";
+    for (let i = 0; i < 3; i++) {
+      const priorityOption = document.createElement("option");
+      priorityOption.value = i;
+      if (i === 0) {
+        priorityOption.textContent = "Low";
+      } else if (i === 1) {
+        priorityOption.textContent = "Medium";
+      } else if (i === 2) {
+        priorityOption.textContent = "High";
+      }
+      priorityContainer.appendChild(priorityOption);
+    }
+
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.onclick = () => {
+      modal.close();
+    };
+
+    submitBtn.textContent = "Submit";
+    submitBtn.onclick = () => {
+      this.createTask(
+        project,
+        titleInput.value,
+        dueDateInput.value,
+        priorityContainer.value
+      );
+      modal.close();
+      this.loadTasks(project);
+    };
+
+    buttonContainer.appendChild(cancelBtn);
+    buttonContainer.appendChild(submitBtn);
+
+    modal.appendChild(titleInput);
+    modal.appendChild(dueDateInput);
+    modal.appendChild(priorityContainer);
+    modal.appendChild(buttonContainer);
+    modal.showModal();
+  }
+
+  createTask(project, title, dueDate, priority) {
+    const formattedDate = format(dueDate, "M/dd/yy");
+    const task = new Task(title, "", formattedDate, priority);
+    project.addTask(task);
+    console.log("task created");
+  }
 
   deleteTask(project, task) {
     project.removeTask(task);
