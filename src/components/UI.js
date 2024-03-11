@@ -80,6 +80,11 @@ export default class UI {
 
     const taskName = document.createElement("div");
     taskName.textContent = `${task.title}`;
+    if (task.priority === 1) {
+      taskName.style.color = "orange";
+    } else if (task.priority === 2) {
+      taskName.style.color = "red";
+    }
 
     const dueDateDiv = document.createElement("div");
     const dateLabel = document.createElement("label");
@@ -98,11 +103,7 @@ export default class UI {
   }
 
   handleCheckbox(task, checkbox) {
-    if (checkbox.checked === true) {
-      task.completed = true;
-    } else {
-      task.completed = false;
-    }
+    checkbox.checked ? (task.completed = true) : (task.completed = false);
   }
 
   loadProjectHeader(project) {
