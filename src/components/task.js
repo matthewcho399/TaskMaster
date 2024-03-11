@@ -49,6 +49,6 @@ export default class Task {
     if (value === this._value) {
       return;
     }
-    this._value = value;
+    this._completed = value;
   }
 }

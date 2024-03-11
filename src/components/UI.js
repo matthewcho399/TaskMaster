@@ -27,6 +27,7 @@ export default class UI {
       format(new Date(2024, 3, 8), "M/dd/yy"),
       2
     );
+    laundry.completed = true;
 
     const reminders = new Project("Reminders");
     reminders.addTask(laundry);
@@ -35,6 +36,7 @@ export default class UI {
     todoList.addProject(reminders);
 
     this.loadProjects(todoList);
+    //this.loadTasks(project)
   }
 
   loadProjects(todoList) {
@@ -48,6 +50,7 @@ export default class UI {
       projectBtn.onclick = () => this.loadTasks(project);
       sidebar.appendChild(projectBtn);
     }
+    this.loadTasks(projects[0]);
   }
 
   loadTasks(project) {
@@ -70,6 +73,10 @@ export default class UI {
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    if (task.completed) {
+      checkbox.checked = "checked";
+    }
+    checkbox.onclick = () => this.handleCheckbox(task, checkbox);
 
     const taskName = document.createElement("div");
     taskName.textContent = `${task.title}`;
@@ -88,6 +95,14 @@ export default class UI {
     taskDiv.appendChild(dueDateDiv);
     taskDiv.appendChild(deleteBtn);
     taskContainer.appendChild(taskDiv);
+  }
+
+  handleCheckbox(task, checkbox) {
+    if (checkbox.checked === true) {
+      task.completed = true;
+    } else {
+      task.completed = false;
+    }
   }
 
   loadProjectHeader(project) {
