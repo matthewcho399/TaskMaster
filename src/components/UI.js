@@ -27,7 +27,6 @@ export default class UI {
       format(new Date(2024, 3, 8), "M/dd/yy"),
       2
     );
-    laundry.completed = true;
 
     const reminders = new Project("Reminders");
     reminders.addTask(laundry);
@@ -41,6 +40,7 @@ export default class UI {
 
   loadProjects(todoList) {
     const sidebar = document.getElementById("sidebar");
+    sidebar.textContent = "";
 
     const projects = todoList.projects;
 
@@ -50,7 +50,53 @@ export default class UI {
       projectBtn.onclick = () => this.loadTasks(project);
       sidebar.appendChild(projectBtn);
     }
+
+    const addProjectBtn = document.createElement("button");
+    addProjectBtn.textContent = "Add Project";
+    addProjectBtn.onclick = () => this.openProjectModal(todoList);
+    sidebar.appendChild(addProjectBtn);
+
     this.loadTasks(projects[0]);
+  }
+
+  openProjectModal(todoList) {
+    const modal = document.getElementById("project-modal");
+    modal.textContent = "";
+    const titleInput = document.createElement("input");
+    const buttonContainer = document.createElement("div");
+    const cancelBtn = document.createElement("button");
+    const submitBtn = document.createElement("button");
+
+    titleInput.placeholder = "Title";
+    titleInput.required = true;
+    titleInput.maxLength = 20;
+
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.onclick = () => {
+      modal.close();
+    };
+
+    submitBtn.textContent = "Submit";
+    submitBtn.onclick = () => {
+      this.createProject(todoList, titleInput.value);
+      this.loadProjects(todoList);
+      modal.close();
+    };
+
+    buttonContainer.appendChild(cancelBtn);
+    buttonContainer.appendChild(submitBtn);
+
+    modal.appendChild(titleInput);
+    modal.appendChild(buttonContainer);
+    modal.showModal();
+  }
+
+  createProject(todoList, title) {
+    if (title.length === 0) {
+      alert("Please enter a title");
+    }
+    const project = new Project(title);
+    todoList.addProject(project);
   }
 
   loadTasks(project) {
@@ -63,8 +109,6 @@ export default class UI {
     for (const task of tasks) {
       this.createTaskDiv(project, task);
     }
-    console.log(project);
-    console.log(tasks);
   }
 
   createTaskDiv(project, task) {
@@ -85,6 +129,7 @@ export default class UI {
     } else if (task.priority === 2) {
       taskName.style.color = "red";
     }
+    console.log(task);
 
     const dueDateDiv = document.createElement("div");
     const dateLabel = document.createElement("label");
@@ -122,7 +167,7 @@ export default class UI {
   }
 
   openTaskModal(project) {
-    const modal = document.getElementById("modal");
+    const modal = document.getElementById("task-modal");
     // Reset modal div
     modal.textContent = "";
 
@@ -182,9 +227,8 @@ export default class UI {
 
   createTask(project, title, dueDate, priority) {
     const formattedDate = format(dueDate, "M/dd/yy");
-    const task = new Task(title, "", formattedDate, priority);
+    const task = new Task(title, "", formattedDate, Number(priority));
     project.addTask(task);
-    console.log("task created");
   }
 
   deleteTask(project, task) {
