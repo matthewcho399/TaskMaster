@@ -43,4 +43,9 @@ export default class Storage {
     project.removeTask(task);
     this.setList(todoList);
   }
+
+  handleCheckbox(todoList, task, checkbox) {
+    checkbox.checked ? (task.completed = true) : (task.completed = false);
+    this.setList(todoList);
+  }
 }

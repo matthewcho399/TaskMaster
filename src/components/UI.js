@@ -109,7 +109,7 @@ export default class UI {
     if (task.completed) {
       checkbox.checked = "checked";
     }
-    checkbox.onclick = () => this.handleCheckbox(task, checkbox);
+    checkbox.onclick = () => this.handleCheckbox(todoList, task, checkbox);
 
     const taskName = document.createElement("div");
     taskName.textContent = `${task.title}`;
@@ -135,8 +135,8 @@ export default class UI {
     taskContainer.appendChild(taskDiv);
   }
 
-  handleCheckbox(task, checkbox) {
-    checkbox.checked ? (task.completed = true) : (task.completed = false);
+  handleCheckbox(todoList, task, checkbox) {
+    storage.handleCheckbox(todoList, task, checkbox);
   }
 
   loadProjectHeader(todoList, project) {
@@ -194,16 +194,18 @@ export default class UI {
 
     submitBtn.textContent = "Submit";
     submitBtn.onclick = () => {
-      this.createTask(
-        todoList,
-        project,
-        titleInput.value,
-        dueDateInput.value,
-        priorityContainer.value
-      );
-      modal.close();
-      console.log(project);
-      this.loadTasks(todoList, project);
+      if (
+        this.createTask(
+          todoList,
+          project,
+          titleInput.value,
+          dueDateInput.value,
+          priorityContainer.value
+        ) === true
+      ) {
+        modal.close();
+        this.loadTasks(todoList, project);
+      }
     };
 
     buttonContainer.appendChild(cancelBtn);
@@ -217,16 +219,30 @@ export default class UI {
   }
 
   createTask(todoList, project, title, dueDate, priority) {
-    const formattedDate = format(dueDate, "M/dd/yy");
-    const task = new Task(title, "", formattedDate, Number(priority));
-    //project.addTask(task);
-    storage.addTask(todoList, project, task);
-    console.log(todoList);
+    if (this.validateTask(title, dueDate, priority) === true) {
+      const formattedDate = format(dueDate, "M/dd/yy");
+      const task = new Task(title, "", formattedDate, Number(priority));
+      storage.addTask(todoList, project, task);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   deleteTask(todoList, project, task) {
-    //project.removeTask(task);
     storage.removeTask(todoList, project, task);
     this.loadTasks(todoList, project);
+  }
+
+  validateTask(title, dueDate, priority) {
+    if (title.length === 0) {
+      alert("Please enter a title");
+      return false;
+    }
+    if (dueDate.length === 0) {
+      alert("Please enter a due date");
+      return false;
+    }
+    return true;
   }
 }
