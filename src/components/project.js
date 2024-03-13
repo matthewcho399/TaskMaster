@@ -1,6 +1,3 @@
-import Task from "./task.js";
-import { format } from "date-fns";
-
 export default class Project {
   constructor(title) {
     this._title = title;
