@@ -1,0 +1,89 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.header {
+    height: 5vh;
+    color: #0091ad;
+    font-size: 35px;
+    padding: 5px;
+    width: 20vw;
+}
+
+#container {
+    display: flex;
+    height: 100vh;
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    background-color: #fcf7ef;
+    padding: 30px 15px;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+#task-container {
+    width: 100%;
+    padding: 30px 40px;
+}
+
+.project-btn {
+    height: 7vh;
+    margin: 5px 0px;
+    border: 1px solid black;
+    text-align: left;
+    background-color: #fcf7ef;
+}
+
+#project-modal {
+    height: 10vh;
+    width: 17vw;
+}
+
+.btn-container {
+    display: flex;
+    
+}
+
+.project-header {
+    display: flex;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.task {
+    display: flex;
+    border-top: 0.5px lightgray;
+    border-top: 0.5px lightgray;
+    justify-content: space-between;
+}
+
+.task-name {
+    margin-left: 20px;
+}
+
+.left-container {
+    display: flex;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+}
+
+.due-date {
+    padding-left: 20px;
+}
+
+.delete-btn {
+    height: 5vh;
+    margin-top: 10px;
+}
+
+.add-task-btn {
+    margin-left: 20px;
+}

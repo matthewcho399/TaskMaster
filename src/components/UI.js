@@ -3,6 +3,7 @@ import Project from "./project.js";
 import TodoList from "./todoList.js";
 import Storage from "./storage.js";
 import { format } from "date-fns";
+import "../style.css";
 
 const storage = new Storage();
 
@@ -25,16 +26,27 @@ export default class UI {
     sidebar.textContent = "";
 
     const projects = todoList._projects;
-    console.log(projects);
+    const myProjectLabel = document.createElement("label");
+    myProjectLabel.textContent = "My Projects";
+    sidebar.appendChild(myProjectLabel);
+
     for (const project of projects) {
-      console.log(project);
       const projectBtn = document.createElement("button");
-      projectBtn.textContent = project._title;
+      projectBtn.classList.add("project-btn");
+
+      const icon = document.createElement("i");
+      icon.classList.add("fas", "fa-tasks");
+      projectBtn.appendChild(icon);
+
+      const label = document.createElement("label");
+      label.textContent = project._title;
+      projectBtn.appendChild(label);
       projectBtn.onclick = () => this.loadTasks(todoList, project);
       sidebar.appendChild(projectBtn);
     }
 
     const addProjectBtn = document.createElement("button");
+    addProjectBtn.classList.add("project-btn");
     addProjectBtn.textContent = "Add Project";
     addProjectBtn.onclick = () => this.openProjectModal(todoList);
     sidebar.appendChild(addProjectBtn);
@@ -69,6 +81,8 @@ export default class UI {
     buttonContainer.appendChild(cancelBtn);
     buttonContainer.appendChild(submitBtn);
 
+    buttonContainer.classList.add("btn-container");
+
     modal.appendChild(titleInput);
     modal.appendChild(buttonContainer);
     modal.showModal();
@@ -80,7 +94,6 @@ export default class UI {
     }
 
     const project = new Project(title);
-    //todoList.addProject(project);
     storage.addProject(todoList, project);
     console.log(todoList);
   }
@@ -103,6 +116,8 @@ export default class UI {
   createTaskDiv(todoList, project, task) {
     const taskContainer = document.getElementById("task-container");
     const taskDiv = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const leftContainer = document.createElement("div");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -128,9 +143,20 @@ export default class UI {
     deleteBtn.textContent = "X";
     deleteBtn.onclick = () => this.deleteTask(todoList, project, task);
 
-    taskDiv.appendChild(checkbox);
-    taskDiv.appendChild(taskName);
-    taskDiv.appendChild(dueDateDiv);
+    infoContainer.appendChild(taskName);
+    infoContainer.appendChild(dueDateDiv);
+    leftContainer.appendChild(checkbox);
+    leftContainer.appendChild(infoContainer);
+
+    taskDiv.classList.add("task");
+    leftContainer.classList.add("left-container");
+    checkbox.classList.add("checkbox");
+    taskName.classList.add("task-name");
+    dueDateDiv.classList.add("due-date");
+    infoContainer.classList.add("info-container");
+    deleteBtn.classList.add("delete-btn");
+
+    taskDiv.appendChild(leftContainer);
     taskDiv.appendChild(deleteBtn);
     taskContainer.appendChild(taskDiv);
   }
@@ -145,11 +171,14 @@ export default class UI {
     const projectName = document.createElement("div");
     const addTaskBtn = document.createElement("button");
 
-    console.log(project);
     projectName.textContent = `${project.title}`;
     addTaskBtn.textContent = "+";
 
     addTaskBtn.onclick = () => this.openTaskModal(todoList, project);
+
+    projectHeader.classList.add("project-header");
+    addTaskBtn.classList.add("add-task-btn");
+
     projectHeader.appendChild(projectName);
     projectHeader.appendChild(addTaskBtn);
     taskContainer.appendChild(projectHeader);
